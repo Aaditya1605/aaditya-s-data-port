@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Code2, Database, BarChart3, Globe, Wrench, Brain } from "lucide-react";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "./ScrollReveal";
+import { motion } from "framer-motion";
 
 interface Skill {
   name: string;
@@ -91,12 +93,11 @@ const SkillBar = ({ skill, isVisible }: { skill: Skill; isVisible: boolean }) =>
         <span className="text-sm font-mono text-primary">{skill.level}%</span>
       </div>
       <div className="skill-bar">
-        <div
+        <motion.div
           className="skill-bar-fill"
-          style={{
-            width: isVisible ? `${skill.level}%` : "0%",
-            transitionDelay: "0.2s",
-          }}
+          initial={{ width: 0 }}
+          animate={{ width: isVisible ? `${skill.level}%` : 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
         />
       </div>
     </div>
@@ -131,50 +132,43 @@ export const SkillsSection = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <ScrollReveal className="text-center mb-16">
           <p className="section-heading">What I work with</p>
           <h2 className="section-title">Technical Skills</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             A comprehensive toolkit spanning data analysis, programming, and web development,
             complemented by strong analytical and communication abilities.
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Skills Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {skillCategories.map((category, index) => (
-            <div
-              key={category.title}
-              className="glass-card p-6 hover:border-primary/30 transition-all duration-500 group"
-              style={{
-                animationDelay: `${index * 0.1}s`,
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? "translateY(0)" : "translateY(20px)",
-                transition: `all 0.6s ease-out ${index * 0.1}s`,
-              }}
-            >
-              {/* Category Header */}
-              <div className="flex items-center gap-3 mb-6">
-                <div
-                  className={`w-10 h-10 rounded-lg bg-gradient-to-br ${category.color} flex items-center justify-center shadow-lg`}
-                >
-                  <category.icon className="w-5 h-5 text-white" />
+        <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {skillCategories.map((category) => (
+            <StaggerItem key={category.title}>
+              <div className="glass-card p-6 hover:border-primary/30 transition-all duration-500 group h-full">
+                {/* Category Header */}
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className={`w-10 h-10 rounded-lg bg-gradient-to-br ${category.color} flex items-center justify-center shadow-lg`}
+                  >
+                    <category.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-lg text-foreground">{category.title}</h3>
                 </div>
-                <h3 className="font-semibold text-lg text-foreground">{category.title}</h3>
-              </div>
 
-              {/* Skills */}
-              <div>
-                {category.skills.map((skill) => (
-                  <SkillBar key={skill.name} skill={skill} isVisible={isVisible} />
-                ))}
+                {/* Skills */}
+                <div>
+                  {category.skills.map((skill) => (
+                    <SkillBar key={skill.name} skill={skill} isVisible={isVisible} />
+                  ))}
+                </div>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
 
         {/* Core Competencies Tags */}
-        <div className="mt-16 text-center">
+        <ScrollReveal delay={0.3} className="mt-16 text-center">
           <h3 className="text-xl font-bold mb-6">Core Competencies</h3>
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {[
@@ -186,16 +180,20 @@ export const SkillsSection = () => {
               "Technical Support",
               "Customer Relationship Management",
               "Visual Storytelling",
-            ].map((competency) => (
-              <span
+            ].map((competency, index) => (
+              <motion.span
                 key={competency}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
                 className="px-4 py-2 rounded-full bg-secondary border border-border text-sm font-medium text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors cursor-default"
               >
                 {competency}
-              </span>
+              </motion.span>
             ))}
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );
